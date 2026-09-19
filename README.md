@@ -5,19 +5,25 @@
 ## 사용
 
 ```bash
-./install.sh ~/dev/my-project
+./install.sh ~/dev/my-project              # 기본형만
+./install.sh ~/dev/my-project node-pnpm    # 스택 스니펫까지 적용
+./install.sh --list                        # 스니펫 목록
 ```
 
-이미 있는 파일은 덮어쓰지 않습니다. 설치 후:
+스니펫을 지정하면 `CLAUDE.md`의 `# 프로젝트 정보` 블록이 그 스택 내용으로 채워집니다.
+이미 있는 파일은 덮어쓰지 않습니다.
 
-1. `CLAUDE.md`의 `# 프로젝트 정보` 블록을 채운다 → `snippets/`에 예시
-2. `.claude/settings.json`의 `ask` 목록에서 안 쓰는 ORM 명령을 지운다
+설치 후 할 일:
+
+1. `CLAUDE.md`의 프로젝트 정보가 실제와 맞는지 확인 (스니펫 없이 설치했으면 직접 채우기)
+2. `.claude/settings.json`의 `ask` 목록에서 안 쓰는 ORM 명령 지우기
 
 `jq` 필요: `brew install jq`
 
 ## 구조
 
 ```
+install.sh                설치 스크립트
 base/                     설치되는 것
 ├─ CLAUDE.md              Karpathy 4원칙 + 프로젝트 정보 블록 (40줄)
 └─ .claude/
@@ -26,12 +32,17 @@ base/                     설치되는 것
       ├─ guard-bash.sh          파괴적 명령 + 패키지 매니저 혼용 차단
       └─ format-after-edit.sh   수정 파일만 포맷·린트
 
-snippets/                 CLAUDE.md 프로젝트 정보 블록 예시
+snippets/                 CLAUDE.md 프로젝트 정보 블록
 ├─ node-pnpm.md
 └─ fastapi.md
 
 docs/references.md        참고 자료 + 읽을 때 주의점
 ```
+
+## 스니펫 추가
+
+`snippets/<이름>.md`를 만들면 바로 `./install.sh <경로> <이름>`으로 쓸 수 있습니다.
+형식은 기존 파일과 동일하게 `# 프로젝트 정보`로 시작하면 됩니다.
 
 ## 유지 방침
 
@@ -39,4 +50,4 @@ docs/references.md        참고 자료 + 읽을 때 주의점
 
 **훅과 권한은 미리 채워도 된다.** 컨텍스트에 실리지 않아서 많아도 부작용이 없습니다.
 
-프로젝트에서 유용했던 규칙은 `base/`로 역반영해서 다음 프로젝트가 물려받게 합니다.
+프로젝트에서 유용했던 규칙은 `base/`나 `snippets/`로 역반영해서 다음 프로젝트가 물려받게 합니다.
