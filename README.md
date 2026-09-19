@@ -12,10 +12,10 @@
 
 ## 시작
 
+한 줄이면 됩니다.
+
 ```bash
-git clone https://github.com/GanziMan/claude-harness.git ~/dev/claude-harness
-cd ~/dev/claude-harness
-./bootstrap.sh
+git clone https://github.com/GanziMan/claude-harness.git ~/dev/claude-harness && ~/dev/claude-harness/bootstrap.sh
 ```
 
 `bootstrap.sh`는 이 레포를 Claude Code **개인 스킬**로 등록합니다 (`~/.claude/skills/harness/`).
