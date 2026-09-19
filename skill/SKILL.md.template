@@ -1,0 +1,48 @@
+---
+name: harness
+description: 이 프로젝트에 Claude Code 하네스(CLAUDE.md, 권한 설정, 훅)를 설치하고 프로젝트에 맞게 조정한다. "하네스 적용", "하네스 설치", "CLAUDE.md 만들어" 라고 할 때 사용.
+argument-hint: (없음 — 프로젝트를 읽어서 자동 판단)
+allowed-tools: Bash(__HARNESS_REPO__/install.sh *) Bash(ls *) Bash(cat *) Bash(test *) Read Edit Write
+---
+
+# 하네스 설치
+
+템플릿 위치: `__HARNESS_REPO__`
+
+## 현재 프로젝트 상태
+
+!`pwd && echo "--- 이미 있는 하네스 파일 ---" && ls -a CLAUDE.md .claude 2>/dev/null || echo "(없음)"`
+
+!`echo "--- lockfile / 프로젝트 파일 ---" && ls pnpm-lock.yaml yarn.lock package-lock.json uv.lock poetry.lock pyproject.toml package.json requirements.txt 2>/dev/null || echo "(없음)"`
+
+!`echo "--- package.json scripts ---" && cat package.json 2>/dev/null | head -60 || echo "(없음)"`
+
+!`echo "--- 사용 가능한 스니펫 ---" && __HARNESS_REPO__/install.sh --list`
+
+## 할 일
+
+1. **위 출력으로 스택을 판단한다.** lockfile이 패키지 매니저를 결정한다(pnpm-lock.yaml → pnpm). 추측하지 말고 파일로 확인한다.
+
+2. **설치한다.** 스택에 맞는 스니펫이 있으면 인자로 넘긴다:
+   ```
+   __HARNESS_REPO__/install.sh . <스니펫이름>
+   ```
+   맞는 스니펫이 없으면 스니펫 없이 설치한다:
+   ```
+   __HARNESS_REPO__/install.sh .
+   ```
+   이미 CLAUDE.md가 있으면 install.sh가 건너뛴다. 그 경우 덮어쓰지 말고 3번으로 간다.
+
+3. **`# 프로젝트 정보` 블록을 이 프로젝트의 실제 값으로 고친다.** 스니펫은 일반적인 예시일 뿐이다. `package.json`의 `scripts`나 `pyproject.toml`을 읽어서 **실제로 존재하는 명령만** 적는다.
+   - 없는 스크립트를 적지 않는다. `pnpm typecheck`가 정의돼 있지 않으면 그 줄을 지우거나 실제 명령(`pnpm tsc --noEmit`)으로 바꾼다.
+   - 프레임워크 버전이 스니펫과 다르면 실제 버전으로 고친다.
+
+4. **`.claude/settings.json`의 `ask` 목록을 정리한다.** 이 프로젝트가 쓰지 않는 ORM·도구 명령을 지운다. Prisma를 안 쓰면 Prisma 줄을 지운다.
+
+5. **`# 금지` 섹션은 건드리지 않는다.** 프로젝트별 규칙을 여기에 추가하지 말 것 — 실제로 사고가 난 뒤에 추가하는 자리다.
+
+## 원칙
+
+- **규칙을 새로 발명하지 않는다.** 이 스킬의 일은 템플릿을 설치하고 **실제 값으로 맞추는 것**이다. 좋아 보이는 규칙을 상상해서 CLAUDE.md에 추가하면 잡음이 되어 다른 규칙의 효과를 깎는다.
+- 파일을 읽어서 확인한 것만 적는다.
+- 끝나면 **무엇을 설치했고 무엇을 고쳤는지** 짧게 보고한다. 그리고 `jq`가 없으면 `brew install jq`가 필요하다고 알린다.

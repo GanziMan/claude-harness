@@ -2,7 +2,23 @@
 
 새 프로젝트에 Claude Code 하네스를 붙이기 위한 템플릿 모음.
 
-## 사용
+## 설치 (한 번만)
+
+```bash
+./bootstrap.sh
+```
+
+Claude Code 개인 스킬로 등록됩니다. 이후 **아무 프로젝트에서** Claude Code를 열고:
+
+```
+/harness
+```
+
+"하네스 적용해줘"처럼 말해도 됩니다. Claude가 lockfile과 `package.json`을 읽어서 스택을 판단하고, 설치한 뒤 `프로젝트 정보`를 **실제 존재하는 명령으로** 맞춥니다.
+
+레포를 옮기거나 `skill/SKILL.md.template`을 고쳤으면 `./bootstrap.sh`를 다시 실행하세요.
+
+## 수동 사용
 
 ```bash
 ./install.sh ~/dev/my-project              # 기본형만
@@ -23,7 +39,9 @@
 ## 구조
 
 ```
-install.sh                설치 스크립트
+bootstrap.sh              /harness 스킬 등록 (한 번만)
+install.sh                파일 복사 스크립트
+skill/SKILL.md.template   /harness 스킬 본문
 base/                     설치되는 것
 ├─ CLAUDE.md              Karpathy 4원칙 + 프로젝트 정보 블록 (40줄)
 └─ .claude/
@@ -51,3 +69,5 @@ docs/references.md        참고 자료 + 읽을 때 주의점
 **훅과 권한은 미리 채워도 된다.** 컨텍스트에 실리지 않아서 많아도 부작용이 없습니다.
 
 프로젝트에서 유용했던 규칙은 `base/`나 `snippets/`로 역반영해서 다음 프로젝트가 물려받게 합니다.
+
+`/harness` 스킬은 **규칙을 새로 발명하지 않도록** 지시받았습니다 — 템플릿을 설치하고 실제 값으로 맞추는 것까지만 합니다.
